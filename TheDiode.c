@@ -2,7 +2,7 @@
 #include <linux/fs.h>
 #include <linux/cdev.h>
 #include <linux/io.h>
-//#include <linux/gpio.h>
+#include <linux/gpio.h>
 #include <linux/delay.h>
 
 
@@ -42,7 +42,7 @@ int gpio_pin = 17;
 
 static int __init init_TheDiode(void)
 {
-    /*if(!gpio_is_valid(gpio_pin))
+    if(!gpio_is_valid(gpio_pin))
     {
         printk("Invalid GPIO Pin \"%d\"\n", gpio_pin);
         return -1;
@@ -54,7 +54,7 @@ static int __init init_TheDiode(void)
         return -1;
     }
     gpio_direction_output(gpio_pin,0);
-    */
+
     //setting major and minor numbers
     devno = MKDEV(140, 0);
     register_chrdev_region(devno, 1, "TheDiode");
@@ -79,8 +79,8 @@ static int __init init_TheDiode(void)
 
 static void __exit module_remove(void)
 {
-    //gpio_set_value(gpio_pin,0);
-    //gpio_free(gpio_pin);
+    gpio_set_value(gpio_pin,0);
+    gpio_free(gpio_pin);
     unregister_chrdev_region(devno,1);
     printk("Goodbye my friend (^-^)/ See you soon I guess (=^3^)= \n");
 }
@@ -115,9 +115,9 @@ void blink(unsigned char * buff, int len)
     for(i = 0; i<val;i++)
     {
         printk("%d + \n", i);
-        //gpio_set_value(gpio_pin,1);
+        gpio_set_value(gpio_pin,1);
         msleep(100);
-        //gpio_set_value(gpio_pin,0);
+        gpio_set_value(gpio_pin,0);
         msleep(100);
     }
     printk("\n");
